@@ -5,6 +5,8 @@ import Logo from './components/logo/Logo';
 import ImageLinkForm from './components/imageLinkForm/ImageLinkForm';
 import Rank from './components/rank/Rank';
 import FaceRecognition from './components/faceRecognition/FaceRecognition';
+import SignIn from './components/signIn/SignIn';
+import Register from './components/register/Register';
 import './App.css';
 
 const USER_ID = 'hld3';
@@ -55,7 +57,9 @@ class App extends Component {
     this.state = {
       input: '',
       imageUrl: '',
-      box: {}
+      box: {},
+      route: 'signIn',
+      isSignedIn: false
     }
   }
 
@@ -92,15 +96,35 @@ class App extends Component {
     this.setState({ input: event.target.value });
   }
 
+  onRouteChange = (route) => {
+    if (route === 'home') {
+      this.setState({ isSignedIn: true })
+    }
+    if (route === 'signOut') {
+      this.setState({ isSignedIn: false })
+    }
+    this.setState({ route: route });
+  }
+
   render() {
     return (
       <div className="App">
         <ParticlesBg type="cobweb" bg={true} />
-        <Navigation />
-        <Logo />
-        <Rank />
-        <ImageLinkForm onInputUrlChange={this.onInputChange} onDetectClick={this.onDetectClick} />
-        <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl} />
+        <Navigation onRouteChange={this.onRouteChange} isSignedIn={this.state.isSignedIn} />
+        {
+          this.state.route === 'home'
+            ? <div>
+              <Logo />
+              <Rank />
+              <ImageLinkForm onInputUrlChange={this.onInputChange} onDetectClick={this.onDetectClick} />
+              <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl} />
+            </div>
+            : (
+              this.state.route === 'signIn'
+                ? <SignIn onRouteChange={this.onRouteChange} />
+                : <Register onRouteChange={this.onRouteChange} />
+            )
+        }
       </div>
     );
   }
