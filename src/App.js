@@ -108,8 +108,24 @@ class App extends Component {
 
     fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs", requestOptions(raw))
       .then(response => response.json())
-      .then(result => this.displayFaceBox(this.calculateFaceLocation(result)))
+      .then(result => {
+        if (result) {
+          fetch('http://localhost:3000/image', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ id: this.state.user.id })
+          })
+            .then(res => res.json())
+            .then(count => {
+              this.setState(Object.assign(this.state.user, {entries: count}))
+            })
+            .catch(error => console.log(error))
+        }
+        this.displayFaceBox(this.calculateFaceLocation(result))
+      })
       .catch(error => console.log('error', error));
+
+    // this.setState({ user:  })
   }
 
   onInputChange = (event) => {
