@@ -22,6 +22,21 @@ let IMAGE_URL = '';
 // YOU DO NOT NEED TO CHANGE ANYTHING BELOW THIS LINE TO RUN THIS EXAMPLE
 ///////////////////////////////////////////////////////////////////////////////////
 
+const initialState = {
+  input: '',
+  imageUrl: '',
+  box: {},
+  route: 'signIn',
+  isSignedIn: false,
+  user: {
+    id: '',
+    name: '',
+    email: '',
+    entries: 0,
+    joined: '',
+  },
+};
+
 const constructRaw = () => {
   return JSON.stringify({
     user_app_id: {
@@ -143,7 +158,7 @@ class App extends Component {
       this.setState({ isSignedIn: true });
     }
     if (route === 'signOut') {
-      this.setState({ isSignedIn: false });
+      this.setState(initialState);
     }
     this.setState({ route: route });
   };
